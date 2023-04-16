@@ -1,0 +1,26 @@
+import os
+from github import Github
+
+# Github账户信息
+username = "YOUR_USERNAME"
+password = "YOUR_PASSWORD_OR_TOKEN"
+
+# 本地文件夹路径和GitHub仓库信息
+local_folder_path = "LOCAL_FOLDER_PATH"
+repo_name = "REPO_NAME"
+repo_description = "REPO_DESCRIPTION"
+
+# 创建GitHub仓库
+g = Github(username, password)
+user = g.get_user()
+repo = user.create_repo(repo_name, description=repo_description)
+
+# 遍历本地文件夹中的所有文件
+for file_name in os.listdir(local_folder_path):
+    file_path = os.path.join(local_folder_path, file_name)
+    with open(file_path, 'rb') as file:
+        content = file.read()
+    # 将文件上传到GitHub仓库中
+    repo.create_file(file_name, f"Commit message: Add {file_name}", content)
+    
+print("Upload completed!")
